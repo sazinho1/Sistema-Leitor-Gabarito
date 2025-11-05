@@ -3,7 +3,15 @@ package logicaPrincipal;
 import java.util.ArrayList;
 
 public class ProcessarResultados {
-    
+
+    private String gabarito;
+
+
+    public ProcessarResultados(String gabarito){
+        this.gabarito = gabarito;
+    }
+
+    //Calcula a nota de um aluno individual (considerando a condição de todos V ou todos F)
     public int calcularNota(String respostasAluno, String gabarito){
         int notafinal = 0;
         int tamanhoGabarito = gabarito.length();
@@ -20,13 +28,22 @@ public class ProcessarResultados {
         return notafinal;
     }
 
-    // as notas no arquivo
-    public ArrayList<Aluno> processarNotas (String arquivoDisciplina, String arquivoGabarito){
+    //Calcula a nota de cada aluno e atualiza ela no arraylist de alunos
+    public void processarNotas (ArrayList<Aluno> alunos){
+         for (Aluno a : alunos) {
+            int nota = calcularNota(a.getRespostas(), gabarito);
+            a.setNota(nota);
+         }
+
 
     }
 
     //Calcula a média das notas dos alunos da disciplina
     public double calcularMedia(ArrayList<Aluno> alunos){
-
+        int mediabruta = 0;
+        for (Aluno a : alunos) {
+            mediabruta =+ a.getNota();
+        }
+        return (mediabruta/alunos.size());
     }
 }

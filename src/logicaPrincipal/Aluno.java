@@ -1,18 +1,26 @@
 package logicaPrincipal;
 
-public class Aluno {
+public class Aluno implements Comparable<Aluno>{
 
     //Atributos básicos
-    String nome;
-    String respostas;
-    int nota;
+    private String nome;
+    private String respostas;
+    private int nota;
 
     //Getters, Setters e Construtor
-    public void Aluno(String nome, String respostas, int nota){
+    public Aluno(String nome, String respostas, int nota){
         this.nome = nome;
         this.respostas =respostas;
         this.nota = nota;
     }
+
+    public Aluno(String nome, String respostas){
+        this.nome = nome;
+        this.respostas = respostas;
+        this.nota = 0;
+    }
+
+    
     public String getNome() {
         return nome;
     }
@@ -32,4 +40,9 @@ public class Aluno {
         this.nota = nota;
     }
 
+    //Para a ordenação do item 2 do trabalho
+    @Override
+    public int compareTo(Aluno outro){
+        return this.nome.compareTo(outro.getNome());
+    }
 }
