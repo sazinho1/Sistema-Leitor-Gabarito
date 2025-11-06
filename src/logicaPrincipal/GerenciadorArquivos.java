@@ -21,6 +21,7 @@ public class GerenciadorArquivos{
         }
     }
 
+    //Metodo pra salvar as respostas de uma disciplina e separá-las por alunos
     public ArrayList<Aluno> lerRespostasDisciplina(String caminhoArquivo) throws IOException{
         ArrayList<Aluno> alunos = new ArrayList<>();
         try (BufferedReader br = new BufferedReader(new FileReader(caminhoArquivo))){
@@ -39,7 +40,7 @@ public class GerenciadorArquivos{
     }
 
 
-    // Um método para ler linhas de um arquivo
+    //Método para ler linhas do gabarito
     public String lerGabarito(String caminhoArquivo) throws IOException{
 
         try (BufferedReader br = new BufferedReader(new FileReader(caminhoArquivo)) ) {
@@ -47,10 +48,10 @@ public class GerenciadorArquivos{
         }
     }
 
-    //Gera o arquivo de saída por notas de modo decrescente ou por ordem alfabetica
+    //Metodo que gera o arquivo de saída com notas de modo decrescente ou por ordem alfabetica
     public void salvarResultadosPorNota(ArrayList<Aluno> alunos, double media, String nomeDisciplina) throws IOException {
         // Arquivo por Nome 
-        Collections.sort(alunos); // Ordena por nome (usando o compareTo)
+        Collections.sort(alunos); //Ordena por nome (usando o compareTo la da classe Aluno que puxa a interface Comparable)
 
         try (BufferedWriter bw = new BufferedWriter(new FileWriter(nomeDisciplina + "_por_nome.txt"))){
             for (Aluno a : alunos) {
@@ -68,8 +69,8 @@ public class GerenciadorArquivos{
                 bw.write(aluno.getNome() + "\t" + aluno.getNota() + " acertos");
                 bw.newLine();
             }
-            bw.newLine(); // Linha em branco
-            // String.format é ótimo para formatar números
+            bw.newLine(); //Linha em branco
+            //Formata a media em uma string
             bw.write(String.format("Média da turma: %.2f", media));
         }
     }

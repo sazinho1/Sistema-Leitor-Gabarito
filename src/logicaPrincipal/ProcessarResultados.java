@@ -4,7 +4,7 @@ import java.util.ArrayList;
 
 public class ProcessarResultados {
 
-    private String gabarito;
+    private final String gabarito;
 
 
     public ProcessarResultados(String gabarito){
@@ -12,6 +12,7 @@ public class ProcessarResultados {
     }
 
     //Calcula a nota de um aluno individual (considerando a condição de todos V ou todos F)
+    @SuppressWarnings("StringEquality") //so pra não mostrar o aviso q ta comparando strings com "=="
     public int calcularNota(String respostasAluno, String gabarito){
         int notafinal = 0;
         int tamanhoGabarito = gabarito.length();
