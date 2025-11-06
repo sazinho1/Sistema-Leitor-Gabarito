@@ -8,17 +8,16 @@ public class ProcessarResultados {
 
 
     public ProcessarResultados(String gabarito){
-        this.gabarito = gabarito;
+        this.gabarito = gabarito.toUpperCase();
     }
 
     //Calcula a nota de um aluno individual (considerando a condição de todos V ou todos F)
-    @SuppressWarnings("StringEquality") //so pra não mostrar o aviso q ta comparando strings com "=="
     public int calcularNota(String respostasAluno, String gabarito){
         int notafinal = 0;
         int tamanhoGabarito = gabarito.length();
 
         //Se ele responder tudo igual
-        if(respostasAluno == "VVVVVVVVVV" || respostasAluno == "FFFFFFFFFF"){return 0;}
+        if(respostasAluno.toUpperCase().equals("VVVVVVVVVV") || respostasAluno.toUpperCase().equals("FFFFFFFFFF") ){return 0;}
         
         //Caso ele tenha feito a prova direito, ele compara caractere por caractere e adiciona 1 ponto por cada resposta certa
         for(int i = 0; i < tamanhoGabarito; i++){
@@ -32,7 +31,7 @@ public class ProcessarResultados {
     //Calcula a nota de cada aluno e atualiza ela no arraylist de alunos
     public void processarNotas (ArrayList<Aluno> alunos){
          for (Aluno a : alunos) {
-            int nota = calcularNota(a.getRespostas(), gabarito);
+            int nota = calcularNota(a.getRespostas().toUpperCase(), gabarito);
             a.setNota(nota);
          }
 
@@ -43,8 +42,13 @@ public class ProcessarResultados {
     public double calcularMedia(ArrayList<Aluno> alunos){
         int mediabruta = 0;
         for (Aluno a : alunos) {
-            mediabruta =+ a.getNota();
+            mediabruta += a.getNota();
         }
-        return (mediabruta/alunos.size());
+        
+        //Fazendo um cast dos numeros pra que o resultado da divisão no final dê um double
+        double mediadouble = mediabruta;
+        double qtdAlunos = alunos.size();
+
+        return (mediadouble/qtdAlunos);
     }
 }

@@ -29,7 +29,7 @@ public class GerenciadorArquivos{
             while ( (linha = br.readLine()) != null) {
                 String[] partes = linha.split("\t"); //Quebra a linha no /t (tab)
                 if (partes.length == 2) { //Vê se o tamanho da linha ta certo (respostas e nome do aluno)
-                    String respostas = partes[0];
+                    String respostas = partes[0].toUpperCase();
                     String nome = partes[1];
                     Aluno a = new Aluno(nome, respostas);
                     alunos.add(a);
@@ -44,7 +44,7 @@ public class GerenciadorArquivos{
     public String lerGabarito(String caminhoArquivo) throws IOException{
 
         try (BufferedReader br = new BufferedReader(new FileReader(caminhoArquivo)) ) {
-        return br.readLine(); //Lê e retorna a primeira linha(que é a unica linha q tem o gabarito)
+        return br.readLine().toUpperCase(); //Lê e retorna a primeira linha(que é a unica linha q tem o gabarito)
         }
     }
 
@@ -71,7 +71,7 @@ public class GerenciadorArquivos{
             }
             bw.newLine(); //Linha em branco
             //Formata a media em uma string
-            bw.write(String.format("Média da turma: %.2f", media));
+            bw.write(String.format("Media da turma: %.2f", media));
         }
     }
 }

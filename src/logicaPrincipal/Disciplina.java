@@ -9,9 +9,9 @@ public class Disciplina {
     ArrayList<Aluno> alunos;
     
     //Getters, Setters e Construtor
-    public Disciplina(String nome, ArrayList<Aluno> alunos) {
+    public Disciplina(String nome){
         this.nome = nome;
-        this.alunos = alunos;
+        this.alunos = new ArrayList<>();
     }
     public String getNome() {
         return nome;
@@ -27,7 +27,7 @@ public class Disciplina {
     }
 
     //Métodos necessários
-    public void AdicionarAluno(ArrayList<Aluno> alunos,Aluno a){
-        alunos.add(a);
+    public void AdicionarAluno(Aluno a){
+        this.alunos.add(a);
     }
 }
