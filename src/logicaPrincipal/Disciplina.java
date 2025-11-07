@@ -5,8 +5,8 @@ import java.util.ArrayList;
 public class Disciplina {
 
     //Atributos básicos
-    String nome;
-    ArrayList<Aluno> alunos;
+    private String nome;
+    private ArrayList<Aluno> alunos;
     
     //Getters, Setters e Construtor
     public Disciplina(String nome){
