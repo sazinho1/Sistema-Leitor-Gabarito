@@ -7,10 +7,10 @@ import javax.swing.*; //classes de layout
 public class PainelCadastro extends JPanel {
 
     // Declarando os componentes da interface
-    private JTextField campoDisciplina;
-    private JTextField campoNomeAluno;
-    private JTextField campoRespostas; 
-    private JButton botaoSalvar;
+    private final JTextField campoDisciplina;
+    private final JTextField campoNomeAluno;
+    private final JTextField campoRespostas; 
+    private final JButton botaoSalvar;
 
     public PainelCadastro() {
         //GridLayout cria a grade de linhas e colunas

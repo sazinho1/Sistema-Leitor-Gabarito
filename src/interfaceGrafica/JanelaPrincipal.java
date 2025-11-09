@@ -8,7 +8,7 @@ import javax.imageio.ImageIO;
 import javax.swing.*;
 
 //JFrame é a classe pra fazer a janela do sistema
-public class JanelaPrincipal extends JFrame  {
+public class JanelaPrincipal extends JFrame {
 
     public JanelaPrincipal() {
         // Configurações básicas da janela

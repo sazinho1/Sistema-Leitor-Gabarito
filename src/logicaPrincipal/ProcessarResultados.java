@@ -8,6 +8,10 @@ public class ProcessarResultados {
 
 
     public ProcessarResultados(String gabarito){
+        if (gabarito == null || !gabarito.matches("^[VFvf]{10}$")) {
+        // Se o gabarito não estiver no formato correto, lançamos uma exceção
+        throw new IllegalArgumentException("O Gabarito selecionado é inválido. Deve conter exatamente 10 caracteres, sendo apenas V ou F.");
+        }   
         this.gabarito = gabarito.toUpperCase();
     }
 
@@ -17,10 +21,12 @@ public class ProcessarResultados {
         int tamanhoGabarito = gabarito.length();
 
         //Se ele responder tudo igual
-        if(respostasAluno.toUpperCase().equals("VVVVVVVVVV") || respostasAluno.toUpperCase().equals("FFFFFFFFFF") ){return 0;}
+        if(respostasAluno.toUpperCase().equals("VVVVVVVVVV") || respostasAluno.toUpperCase().equals("FFFFFFFFFF")) {
+            return 0;
+        }
         
         //Caso ele tenha feito a prova direito, ele compara caractere por caractere e adiciona 1 ponto por cada resposta certa
-        for(int i = 0; i < tamanhoGabarito; i++){
+        for(int i = 0; i < tamanhoGabarito; i++) {
             if (respostasAluno.toUpperCase().charAt(i) == gabarito.toUpperCase().charAt(i)) {
                 notafinal ++;
             }
@@ -33,9 +39,7 @@ public class ProcessarResultados {
          for (Aluno a : alunos) {
             int nota = calcularNota(a.getRespostas().toUpperCase(), gabarito);
             a.setNota(nota);
-         }
-
-
+        }
     }
 
     //Calcula a média das notas dos alunos da disciplina

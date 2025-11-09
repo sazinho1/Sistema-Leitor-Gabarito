@@ -10,10 +10,10 @@ import java.util.Collections;
 
 
 
-public class GerenciadorArquivos{
+public class GerenciadorArquivos {
 
-    //
-    public void salvarRespostaAluno(String Disciplina, String nomeAluno, String respostas) throws IOException{
+    // Método para salvar a resposta de um aluno em um arquivo da disciplina
+    public void salvarRespostaAluno(String Disciplina, String nomeAluno, String respostas) throws IOException {
         try (BufferedWriter bw = new BufferedWriter(new FileWriter(Disciplina + ".txt", true))) {
             String linhaParaSalvar = respostas + "\t" + nomeAluno;
             bw.write(linhaParaSalvar); //Escreve a linha
@@ -21,29 +21,44 @@ public class GerenciadorArquivos{
         }
     }
 
-    //Metodo pra salvar as respostas de uma disciplina e separá-las por alunos
-    public ArrayList<Aluno> lerRespostasDisciplina(String caminhoArquivo) throws IOException{
+    // metodo pra salvar as respostas de uma disciplina e separá-las por alunos
+    public ArrayList<Aluno> lerRespostasDisciplina(String caminhoArquivo) throws IOException {
         ArrayList<Aluno> alunos = new ArrayList<>();
-        try (BufferedReader br = new BufferedReader(new FileReader(caminhoArquivo))){
+        try (BufferedReader br = new BufferedReader(new FileReader(caminhoArquivo))) {
             String linha;
-            while ( (linha = br.readLine()) != null) {
+            while ((linha = br.readLine()) != null) {
                 String[] partes = linha.split("\t"); //Quebra a linha no /t (tab)
                 if (partes.length == 2) { //Vê se o tamanho da linha ta certo (respostas e nome do aluno)
-                    String respostas = partes[0].toUpperCase();
-                    String nome = partes[1];
-                    Aluno a = new Aluno(nome, respostas);
-                    alunos.add(a);
+                    String respostas = partes[0].toUpperCase(); //Pega as respostas e transforma em maiusculo
+                    String nome = partes[1].trim(); //Pega o nome do aluno e tira espaços em branco desnecessarios
+                    
+                    if (respostas.matches("^[VFvf]{10}$") && !nome.isEmpty()) { 
+                    // Se as respostas forem válidas (10 V/F) e o nome não estiver vazio
+                    
+                    String respostasMaiusculas = respostas.toUpperCase();
+                    // converte para maiúsculas (necessário para o cálculo correto da nota)
+                    
+                    // Cria e adiciona o aluno
+                    alunos.add(new Aluno(nome, respostasMaiusculas));
+                    } 
+                // else: Linha inválida (formato de resposta errado ou nome vazio), o programa IGNORA e segue para a próxima linha
                 }
+            // else: Linha inválida (ex: menos ou mais de 1 tab), o programa IGNORA
             }
         }
+        // Se nada foi lido, algo deu errado, então lança uma exceção
+        if (alunos.isEmpty()) {
+        throw new IOException("O arquivo da disciplina não contém respostas válidas.");
+        }
+
         return alunos;
     }
 
 
     //Método para ler linhas do gabarito
-    public String lerGabarito(String caminhoArquivo) throws IOException{
+    public String lerGabarito(String caminhoArquivo) throws IOException {
 
-        try (BufferedReader br = new BufferedReader(new FileReader(caminhoArquivo)) ) {
+        try (BufferedReader br = new BufferedReader(new FileReader(caminhoArquivo))) { 
         return br.readLine().toUpperCase(); //Lê e retorna a primeira linha(que é a unica linha q tem o gabarito)
         }
     }
@@ -61,7 +76,7 @@ public class GerenciadorArquivos{
         }
 
         // Arquivo por Nota Decrescente
-        //função lambda pra comparar os alunos (a1 e a2) na ordem inversa (compare(a2,a1) )
+        //função lambda pra comparar os alunos (a1 e a2) na ordem inversa (compare(a2,a1))
         Collections.sort(alunos, (a1, a2) -> Integer.compare(a2.getNota(), a1.getNota()));
 
         try (BufferedWriter bw = new BufferedWriter(new FileWriter(nomeDisciplina + "_por_nota.txt"))) {

@@ -1,18 +1,19 @@
 package interfaceGrafica;
 
 import java.awt.*;
+import java.io.File;
 import javax.swing.*;
 
 public class PainelResultados extends JPanel {
 
 
-    private JButton botaoSelectDisciplina;
-    private JButton botaoSelectGabarito;
-    private JButton botaoProcessar;
-    private JLabel labelCaminhoDisciplina; //Mostra o arquivo selecionado
-    private JLabel labelCaminhoGabarito;
-    private JTextArea areaResultados; //Onde os resultados aparecem
-    private JScrollPane scrollResultados; //Barra de rolagem para a área de texto
+    private final JButton botaoSelectDisciplina;
+    private final JButton botaoSelectGabarito;
+    private final JButton botaoProcessar;
+    private final JLabel labelCaminhoDisciplina; //Mostra o arquivo selecionado
+    private final JLabel labelCaminhoGabarito;
+    private final JTextArea areaResultados; //Onde os resultados aparecem
+    private final JScrollPane scrollResultados; //Barra de rolagem para a área de texto
 
     public PainelResultados() {
         //BorderLayout é pra dividir o painel em norte, sul, leste, oeste e centro
@@ -49,6 +50,30 @@ public class PainelResultados extends JPanel {
         //Botando os botoes no painel principal
         add(painelBotoes, BorderLayout.NORTH); // Pro painel de botões ficar no topo
         add(scrollResultados, BorderLayout.CENTER); // Pra área de texto ficar no centro
+    }
+
+
+    public String selecionarArquivo(JLabel labelCaminho) {
+    // cria o seletor de arquivos (JFileChooser)
+    JFileChooser fileChooser = new JFileChooser();
+    fileChooser.setDialogTitle("Selecione o Arquivo...");
+
+    // mostra o diálogo e espera pela seleção
+    int resultado = fileChooser.showOpenDialog(this);
+
+    if (resultado == JFileChooser.APPROVE_OPTION) {
+        //  se um arquivo foi selecionado:
+        File arquivoSelecionado = fileChooser.getSelectedFile();
+        String caminhoAbsoluto = arquivoSelecionado.getAbsolutePath();
+        
+        //  atualiza o rótulo do painel com o nome do arquivo (exibição para o usuário)
+        labelCaminho.setText(arquivoSelecionado.getName()); 
+        
+        // retorna o caminho para o Controlador
+        return caminhoAbsoluto;
+    } 
+    //se o usuário cancelou, retorna null
+    return null;
     }
 
     // Getters pro controlador
