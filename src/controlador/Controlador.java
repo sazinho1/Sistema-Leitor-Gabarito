@@ -5,6 +5,7 @@ import interfaceGrafica.PainelResultados;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import javax.swing.*; 
 import logicaPrincipal.Aluno;
@@ -57,14 +58,34 @@ public class Controlador implements ActionListener {
             //botao pra processar os resultados e criar os arquivos
             else if (source == painelResultados.getBotaoProcessar()) {
                 processarResultados();
-            }
+            } 
             
-        } catch (Exception execao) {
-            // pop up de erro generico
-            JOptionPane.showMessageDialog(painelResultados, 
-                "Ocorreu um erro: " + execao.getMessage(), 
-                "Erro", 
-                JOptionPane.ERROR_MESSAGE);
+        } catch (IllegalArgumentException eGabarito) { 
+        // erro na validação do gabarito (formato inválido)
+        JOptionPane.showMessageDialog(painelResultados, 
+            "Erro de Formato no Gabarito: " + eGabarito.getMessage(), 
+            "ERRO DE VALIDAÇÃO", 
+            JOptionPane.ERROR_MESSAGE);
+            
+        } catch (IOException eArquivo) { 
+        // erro de IO
+        JOptionPane.showMessageDialog(painelResultados, 
+            "Erro ao manipular arquivo: " + eArquivo.getMessage() + 
+            "\nVerifique se os arquivos existem e se o nome da Disciplina está correto.",
+            "ERRO DE ARQUIVO (I/O)", 
+            JOptionPane.ERROR_MESSAGE);
+            
+        } catch (Exception eGenerica) { 
+        // erro genérico
+        eGenerica.printStackTrace(); // imprime o stack trace do erro no console para ajudar na depuração
+        JOptionPane.showMessageDialog(painelResultados, 
+            "Ocorreu um erro inesperado e grave: " + eGenerica.getMessage() + 
+            "\nO programa será encerrado. Consulte o console para detalhes.", 
+            "ERRO CRÍTICO", 
+            JOptionPane.ERROR_MESSAGE);
+            
+        // fecha a aplicação
+        System.exit(1);
         }
     }
     
@@ -77,14 +98,23 @@ public class Controlador implements ActionListener {
         String respostas = painelCadastro.getCampoRespostas().getText().toUpperCase();
 
         // pra ver se o cara digitou alguma coisa
-        if (disciplina.isEmpty() || nome.isEmpty() || respostas.length() != 10) {
+        if (disciplina.isEmpty() || nome.isEmpty()) {
             JOptionPane.showMessageDialog(painelCadastro, 
                 "Preencha todos os campos! As respostas devem ter 10 caracteres.", 
                 "Erro de Validação", 
                 JOptionPane.WARNING_MESSAGE);
             return;//fecha a janela de erro
         }
-
+        
+        // faz a validação das respostas (deve ter 10 caracteres, apenas V ou F)
+        if (!respostas.matches("^[VFvf]{10}$")) {
+            JOptionPane.showMessageDialog(painelCadastro, 
+                "As respostas devem conter exatamente 10 caracteres, apenas V ou F.", 
+                "Erro de Validação", 
+                JOptionPane.WARNING_MESSAGE);
+            return;//fecha a janela de erro
+        }
+        
         // chama a logica
         gerenciador.salvarRespostaAluno(disciplina, nome, respostas);
 
@@ -98,26 +128,26 @@ public class Controlador implements ActionListener {
     }
     
     private void selecionarArquivoDisciplina() {
-        // função pra abrir o seletor de arquivo
-        JFileChooser seletor = new JFileChooser("."); // "." = pasta atual
-        int resultado = seletor.showOpenDialog(painelResultados);
-
-        if (resultado == JFileChooser.APPROVE_OPTION) {// se der 0 é pq o arquivo ta ok
-            File arquivo = seletor.getSelectedFile();
-            caminhoDisciplina = arquivo.getAbsolutePath();
-            painelResultados.getLabelCaminhoDisciplina().setText(arquivo.getName());// mostra o arquivo selecionado
+        // chama a função da view pra selecionar o arquivo
+        // recebe a string do caminho do arquivo selecionado
+        String novoCaminho = painelResultados.selecionarArquivo(
+            painelResultados.getLabelCaminhoDisciplina() // passa o JLabel para ser atualizado lá na View
+        );
+    
+        // o Controller armazena o caminho
+        if (novoCaminho != null) {
+            this.caminhoDisciplina = novoCaminho;
         }
     }
     
     private void selecionarArquivoGabarito() {
-        // mesma coisa do outro
-        JFileChooser seletor = new JFileChooser(".");
-        int resultado = seletor.showOpenDialog(painelResultados);
+        // repete a mesma lógica
+        String novoCaminho = painelResultados.selecionarArquivo(
+            painelResultados.getLabelCaminhoGabarito() // passa o JLabel para ser atualizado lá na View
+        );
 
-        if (resultado == JFileChooser.APPROVE_OPTION) {
-            File arquivo = seletor.getSelectedFile();
-            caminhoGabarito = arquivo.getAbsolutePath();
-            painelResultados.getLabelCaminhoGabarito().setText(arquivo.getName());
+        if (novoCaminho != null) {
+            this.caminhoGabarito = novoCaminho;
         }
     }
     
